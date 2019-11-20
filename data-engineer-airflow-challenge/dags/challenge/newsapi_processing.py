@@ -32,7 +32,8 @@ class Source_Headlines(object):
         self.sources=json_normalize(en_sources['sources'])
         return(self.sources)
 
-
+    # Specific function to handle the pull of headlines and json normalization
+    # Separated for testability - invoked by store_headlines
     def headline_transform(source):
         source_headlines=pd.DataFrame()
         page_num=1
@@ -48,7 +49,6 @@ class Source_Headlines(object):
                                                      sort=True)
         return(source_headlines)
 
-    # Headline collection and upload to S3
     def store_headlines(self):
         # Iterate over the ID column of the sources dataframe
         # Submit source to the transform functions

@@ -26,6 +26,18 @@ There are two strong candidates for integration testing:
 
 The `json_normalize` function in `pandas.io.json` simplifies much of the processing needed to move from raw JSON to a DataFrame. In several cases, I opted to call out the specific JSON nests (e.g. `sources`, `totalResults`, and `headlines`) thanks to testing my work in Jupyter prior to committing code to this repository, which allowed me to skip a lot of the setup of the DataFrames that were CSV exported. That influenced my choice of test for the `headline_transform` function, as I opted to ensure that the columns returned from a popular content source matched my expectation. This testing premise is faulty in the long run, since they may change their API output.
 
+### Specific Environment Notes
+In order to avoid rebuilding the Python environment on my home laptop, Anaconda was used to handle the creation and use of a Python 3.6.9 environment.
+```
+conda create -n py36 python=3.6.9 anaconda
+conda activate py36
+make init
+make run
+```
+
+Docker Version: 19.03.5, build 633a0ea
+VirtualBox Version: 6.0.12 r133076 
+
 ## Challenge Summary
 Our data pipeline must fetch data from [News API](https://newsapi.org),
  transform the data into a tabular structure,

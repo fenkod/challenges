@@ -37,7 +37,7 @@ class Source_Headlines(object):
             # Default call is limited to 20 results per page.
             # Several sources have more headlines than the max 100 per page
             # Load the headlines and paginate
-            while len(self.headlines) < num_results
+            while len(self.headlines) < num_results:
                 fetch=self.newsapi.get_top_headlines(sources=source,
                                                      page_size=100,
                                                      page=page_num)

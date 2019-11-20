@@ -8,6 +8,11 @@ from io import StringIO
 
 # Environment variables are loaded into Docker container through env file
 
+# To-Do: Add logging to the fucntions to debug issues.
+# To-Do: Bonus inclusion of additional keywords.
+# To-Do: Implement the error handling from the newsapi library
+# To-Do: Terraform to create the S3 bucket with the appropriate IAM role
+
 class Source_Headlines(object):
     def __init__(self):
         super(Source_Headlines,self).__init__()
@@ -27,30 +32,29 @@ class Source_Headlines(object):
         return(self.sources)
 
 
-    # Headline collection and upload to S3
-    def get_headlines(self):
-        # Iterate over the ID column of the sources dataframe
-        for source in self.sources['id']:
-            page_num=1
-            results=self.newsapi.get_top_headlines(sources=source)
-            num_results=results['totalResults']
-            # Default call is limited to 20 results per page.
-            # Several sources have more headlines than the max 100 per page
-            # Load the headlines and paginate
-            while len(self.headlines) < num_results:
-                fetch=self.newsapi.get_top_headlines(sources=source,
-                                                     page_size=100,
-                                                     page=page_num)
-                fetch=json_normalize(fetch['articles'])
-                # Append results to the source headlines dataframe
-                self.headlines=self.headlines.append(fetch,
+    def headline_transform(source):
+        source_headlines=pd.DataFrame()
+        page_num=1
+        results=self.newsapi.get_top_headlines(sources=source)
+        num_results=results['totalResults']
+        while len(source_headlines) > num_results:
+            fetch=self.newsapi.get_top_headlines(sources=source,
+                                                 page_size=100,
+                                                 page=page_num)
+            fetch=json_normalize(fetch['articles'])
+            source_headlines=source_headlines.append(fetch,
                                                      ignore_index=True,
                                                      sort=True)
-                page+=1
-            # Because we are in an iteration of source, we can push
-            # to the correct filepath in S3 expediently here.
-            # Optimally, the S3 step would be its own subtask
-            csv_buffer=StringIO()
+        return(source_headlines)
+
+    # Headline collection and upload to S3
+    def store_headlines(self):
+        # Iterate over the ID column of the sources dataframe
+        # Submit source to the transform functions
+        # Upload to S3
+        for source in self.sources['id']:
+            csv_buffer=StringIO
+            self.headlines=headline_transform(source)
             self.headlines.to_csv(csv_buffer)
             s3_load.Object(self.bucket,
                            id + "/" + str(date.today()) + \

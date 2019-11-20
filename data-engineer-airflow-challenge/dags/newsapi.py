@@ -33,11 +33,11 @@ get_sources_task = PythonOperator(task_id="get_sources",
                                   python_callable=news_challenge.get_sources,
                                   dag=dag)
 
-get_headlines_task = PythonOperator(task_id="get_headlines",
-                                    python_callable=news_challenge.get_headlines,
+headlines_task = PythonOperator(task_id="headlines",
+                                    python_callable=news_challenge.store_headlines,
                                     dag=dag)
 
 end_task = DummyOperator(task_id="end",
                          dag=dag)
 
-start_task >> get_sources_task >> get_headlines_task >> end_task
+start_task >> get_sources_task >> headlines_task >> end_task

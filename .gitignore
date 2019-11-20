@@ -10,3 +10,6 @@
 
 # System Files
 .DS_Store
+
+# Variables
+*variables.env

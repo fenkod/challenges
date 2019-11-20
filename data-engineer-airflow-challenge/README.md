@@ -8,6 +8,7 @@ In order to interact with newsapi.org and AWS, several configuration options mus
 1. `NEWS_API=<NEWSAPI_API_KEY>`
 2. `AWS_ACCESS_KEY=<USERS_AWS_ACCESS_KEY>`
 3. `AWS_SECRET_ACCESS_KEY=<USERS_AWS_SECRET_ACCESS_KEY>`
+
 The `docker/variables.env` file has been added to the `.gitignore` to ensure that keys aren't accidentally saved into source control.
 
 ## Challenge Summary

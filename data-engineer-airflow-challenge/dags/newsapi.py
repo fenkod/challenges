@@ -9,7 +9,9 @@ import os
 import pandas as pd
 import boto3 as boto
 
+# Connects to the News API and gets sources
 def get_sources():
+    # Try block to validate environment variable is present
     try:
         os.environ["NEWS_API"]
     except KeyError:
@@ -20,8 +22,11 @@ def get_sources():
     english_sources=json_normalize(english_sources['sources'])
     return(english_sources)
 
+
+# Headline collection and upload to S3
 def get_headlines(**context):
     sources=context['task_instance'].xcom_pull(task_ids='sources_task')
+    # Try block to validate environment variable is present
     try:
         os.environ["NEWS_API"]
     except KeyError:
@@ -30,11 +35,15 @@ def get_headlines(**context):
     newsapi=NewsApiClient(api_key=os.environ["NEWS_API"])
     bucket="dfenko-tempus"
     s3_load=boto.resource('s3')
+    # Retrieve headlines for each source and output to S3
     for source in sources['id']:
-        fetch=json_normalize(newsapi.get_top_headlines(sources=source)['articles'])
+        fetch=newsapi.get_top_headlines(sources=source)
+        fetch=json_normalize(fetch['articles'])
         csv_buffer=StringIO()
         fetch.to_csv(csv_buffer)
-        s3_load.Object(bucket, id + "/" + str(date.today()) + "_top_headlines.csv").put(Body=csv.buffer.getvalue())
+        s3_load.Object(bucket, 
+                       id + "/" + str(date.today()) + \ 
+                       "_top_headlines.csv").put(Body=csv.buffer.getvalue())
         
 
 default_args = {
@@ -58,8 +67,12 @@ dag = DAG(
 
 dummy_operator = DummyOperator(task_id='dummy_task', retries=3, dag=dag)
 
-sources_operator = PythonOperator(task_id='sources_task', python_callable=get_sources, dag=dag)
+sources_operator = PythonOperator(task_id='sources_task', 
+                                  python_callable=get_sources,
+                                  dag=dag)
 
-headlines_operator = PythonOperator(task_id='headlines_task', python_callable=get_headlines, dag=dag)
+headlines_operator = PythonOperator(task_id='headlines_task', 
+                                    python_callable=get_headlines,
+                                    dag=dag)
 
 dummy_operator >> sources_operator >> headlines_operator

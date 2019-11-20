@@ -12,6 +12,7 @@ from io import StringIO
 # To-Do: Bonus inclusion of additional keywords.
 # To-Do: Implement the error handling from the newsapi library
 # To-Do: Terraform to create the S3 bucket with the appropriate IAM role
+# To-Do: Utilize xcom context passing to reduce the need for class instantiation
 
 class Source_Headlines(object):
     def __init__(self):

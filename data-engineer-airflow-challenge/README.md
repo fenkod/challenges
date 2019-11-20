@@ -3,7 +3,9 @@ For this challenge,
  you will develop a simple
  [Apache Airflow](https://airflow.apache.org) data pipeline.
 
-## Candidate Notes
+## Candidate Details
+
+### Necessary Set Up
 In order to interact with newsapi.org and AWS, several configuration options must be passed into the Airflow docker container. I've opted to use a environment file in the `/docker` directory named `variables.env`. This file expects three lines
 1. `NEWS_API=<NEWSAPI_API_KEY>`
 2. `AWS_ACCESS_KEY=<USERS_AWS_ACCESS_KEY>`
@@ -11,7 +13,18 @@ In order to interact with newsapi.org and AWS, several configuration options mus
 
 The `docker/variables.env` file has been added to the `.gitignore` to ensure that keys aren't accidentally saved into source control.
 
-Within the appropriate users AWS account, there needs to be a bucket named `dfenko-tempus`. The user whose AWS credentials are being used needs to have the IAM permission of `AmazonS3FullAccess`. With more time, it would be necessary to create Terraform to create the S3 bucket and to create an IAM role that can be used by the container to absolve the need for a user's API credentials.
+Within the appropriate users AWS account, there needs to be a bucket named `dfenko-tempus`. The user whose AWS credentials are being used needs to have the IAM permission of `AmazonS3FullAccess`.
+
+### Notes
+With more time, it would be necessary to create Terraform to create the S3 bucket and to create an IAM role that can be used by the container to absolve the need for a user's API credentials.
+
+Being new to Airflow, I owe myself the time to learn how to better utilize [Xcom](https://airflow.apache.org/concepts.html?highlight=xcom) in Airflow to pass context between operators instead of creating a class for my functions to pass context between them.
+
+There are two strong candidates for integration testing:
+1. Utilizing the `NewsAPIException` feature of the newsapi python package to better handle API errors. In retrospect, I would have used that at start of the process, as I had to wait 24 hours to test my DAG.
+2. There is numerous documentation around for testing use cases in boto3 and the AWS API. I would like to build up testing to ensure that content is being written.
+
+The `json_normalize` function in `pandas.io.json` simplifies much of the processing needed to move from raw JSON to a DataFrame. In several cases, I opted to call out the specific JSON nests (e.g. `sources`, `totalResults`, and `headlines`) thanks to testing my work in Jupyter prior to committing code to this repository, which allowed me to skip a lot of the setup of the DataFrames that were CSV exported. That influenced my choice of test for the `headline_transform` function, as I opted to ensure that the columns returned from a popular content source matched my expectation. This testing premise is faulty in the long run, since they may change their API output.
 
 ## Challenge Summary
 Our data pipeline must fetch data from [News API](https://newsapi.org),

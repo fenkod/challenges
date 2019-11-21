@@ -15,6 +15,12 @@ The `docker/variables.env` file has been added to the `.gitignore` to ensure tha
 
 Within the appropriate users AWS account, there needs to be a bucket named `dfenko-tempus`. The user whose AWS credentials are being used needs to have the IAM permission of `AmazonS3FullAccess`.
 
+### Testing
+Since `make test` doesn't include the `variables.env` file that `make run` will,  you need to pass in three environment variables to the command in order to have the tests succeed.
+```
+make test -e NEWS_API=<NEWSAPI_API_KEY> AWS_ACCESS_KEY=<USERS_AWS_ACCESS_KEY> AWS_SECRET_ACCESS_KEY=<USERS_AWS_SECRET_ACCESS_KEY>
+```
+
 ### Notes
 With more time, it would be necessary to create Terraform to create the S3 bucket and to create an IAM role that can be used by the container to absolve the need for a user's API credentials.
 
@@ -26,6 +32,13 @@ There are two strong candidates for integration testing:
 
 The `json_normalize` function in `pandas.io.json` simplifies much of the processing needed to move from raw JSON to a DataFrame. In several cases, I opted to call out the specific JSON nests (e.g. `sources`, `totalResults`, and `headlines`) thanks to testing my work in Jupyter prior to committing code to this repository, which allowed me to skip a lot of the setup of the DataFrames that were CSV exported. That influenced my choice of test for the `headline_transform` function, as I opted to ensure that the columns returned from a popular content source matched my expectation. This testing premise is faulty in the long run, since they may change their API output.
 
+I'm including a Jupyter notebook named `Tempus.ipynb` that I used to validate my work. In the same directory as that notebook, there needs to be a file named `tempus.json` with a simple JSON entry in it with the News API key. AWS credentials for boto3 should be in the `~/.aws/config` file, per boto3 documentation.
+```
+{
+    "news_api": "<NEWSAPI_API_KEY>",
+}
+```
+
 ### Specific Environment Notes
 In order to avoid rebuilding the Python environment on my home laptop, Anaconda was used to handle the creation and use of a Python 3.6.9 environment.
 ```
@@ -36,7 +49,7 @@ make run
 ```
 
 Docker Version: 19.03.5, build 633a0ea
-VirtualBox Version: 6.0.12 r133076 
+VirtualBox Version: 6.0.12 r133076
 
 ## Challenge Summary
 Our data pipeline must fetch data from [News API](https://newsapi.org),

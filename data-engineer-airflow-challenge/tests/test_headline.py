@@ -14,5 +14,5 @@ class TestSample:
         assumed_columns = ['author', 'content', 'description', 'publishedAt',
                            'source.id', 'source.name', 'title', 'url',
                            'urlToImage']
-        sample_headlines = news_challenge.headline_transform('abc-news')
+        sample_headlines = news_challenge.headline_transform("abc-news")
         self.assertTrue(sample_headlines.columns == assumed_columns)

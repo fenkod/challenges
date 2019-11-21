@@ -58,7 +58,7 @@ class Source_Headlines(object):
             self.headlines=headline_transform(source)
             self.headlines.to_csv(csv_buffer)
             s3_load.Object(self.bucket,
-                           id + "/" + str(date.today()) + \
+                           source + "/" + str(date.today()) + \
                            "_top_headlines.csv").put(Body=csv.buffer.getvalue())
             # Clear self.headlines for the next source iteration
             self.headlines=pd.DataFrame()

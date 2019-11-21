@@ -9,7 +9,7 @@ sys.path.append('../')
 
 news_challenge = Source_Headlines()
 
-class TestSample(unittest.TestSample):
+class TestSample(unittest.TestCase):
     def setUp(self):
         pass
 

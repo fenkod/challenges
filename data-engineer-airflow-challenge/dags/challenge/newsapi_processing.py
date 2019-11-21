@@ -39,7 +39,7 @@ class Source_Headlines(object):
         page_num=1
         results=self.newsapi.get_top_headlines(sources=source)
         num_results=results['totalResults']
-        while len(source_headlines) > num_results:
+        while len(source_headlines) < num_results:
             fetch=self.newsapi.get_top_headlines(sources=source,
                                                  page_size=100,
                                                  page=page_num)

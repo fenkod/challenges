@@ -21,7 +21,7 @@ class TestSample(unittest.TestCase):
                            'source.id', 'source.name', 'title', 'url',
                            'urlToImage']
         sample_headlines = news_challenge.headline_transform("abc-news")
-        self.assertEqual(sample_headlines.columns.all(), assumed_columns)
+        self.assertEqual(list(sample_headlines.columns), assumed_columns)
 
 if __name__ == '__main__':
     unittest.main()

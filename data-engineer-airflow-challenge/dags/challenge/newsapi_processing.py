@@ -34,6 +34,7 @@ class Source_Headlines(object):
 
     # Specific function to handle the pull of headlines and json normalization
     # Separated for testability - invoked by store_headlines
+    @staticmethod
     def headline_transform(source):
         source_headlines=pd.DataFrame()
         page_num=1

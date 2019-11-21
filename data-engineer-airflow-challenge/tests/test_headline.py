@@ -9,10 +9,19 @@ sys.path.append('../')
 
 news_challenge = Source_Headlines()
 
-class TestSample:
+class TestSample(unittest.TestSample):
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
     def test_transform(self):
         assumed_columns = ['author', 'content', 'description', 'publishedAt',
                            'source.id', 'source.name', 'title', 'url',
                            'urlToImage']
         sample_headlines = news_challenge.headline_transform("abc-news")
-        self.assertTrue(sample_headlines.columns == assumed_columns)
+        self.assertEqual(sample_headlines.columns, assumed_columns)
+
+if __name__ == '__main__':
+    unittest.main()

@@ -55,7 +55,7 @@ class Source_Headlines(object):
         # Upload to S3
         for source in self.sources['id']:
             csv_buffer=StringIO
-            self.headlines=headline_transform(source)
+            self.headlines=self.headline_transform(source)
             self.headlines.to_csv(csv_buffer)
             s3_load.Object(self.bucket,
                            source + "/" + str(date.today()) + \

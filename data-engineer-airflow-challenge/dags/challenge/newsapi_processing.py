@@ -28,7 +28,7 @@ class Source_Headlines(object):
 
     # Connects to the News API and gets sources
     def get_sources(self):
-        en_sources=newsapi.get_sources(language="en")
+        en_sources=self.newsapi.get_sources(language="en")
         self.sources=json_normalize(en_sources['sources'])
         return(self.sources)
 

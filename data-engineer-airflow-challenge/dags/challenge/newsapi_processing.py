@@ -25,7 +25,6 @@ class Source_Headlines(object):
         self.sources=pd.DataFrame()
         self.headlines=pd.DataFrame()
         self.bucket="dfenko-tempus"
-        self.csv_buffer=StringIO()
 
     # Connects to the News API and gets sources
     def get_sources(self):
@@ -56,9 +55,10 @@ class Source_Headlines(object):
         # Upload to S3
         for source in self.sources['id']:
             self.headlines=self.headline_transform(source)
-            self.headlines.to_csv(self.csv_buffer)
+            csv_buffer=StringIO()
+            self.headlines.to_csv(csv_buffer)
             self.s3bucket.Object(self.bucket,
                            source + "/" + str(date.today()) + \
-                           "_top_headlines.csv").put(Body=self.csv_buffer.getvalue())
+                           "_top_headlines.csv").put(Body=csv_buffer.getvalue())
             # Clear self.headlines for the next source iteration
             self.headlines=pd.DataFrame()
